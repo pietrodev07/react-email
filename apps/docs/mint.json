@@ -43,7 +43,21 @@
   "navigation": [
     {
       "group": "Overview",
-      "pages": ["introduction", "contributing", "changelog", "roadmap", "cli"]
+      "pages": [
+        "introduction",
+        "contributing",
+        {
+          "group": "Contributing",
+          "icon": "code-pull-request",
+          "pages": [
+            "contributing/opening-issues",
+            "contributing/codebase-overview"
+          ]
+        },
+        "changelog",
+        "roadmap",
+        "cli"
+      ]
     },
     {
       "group": "Getting Started",
@@ -88,7 +102,9 @@
     },
     {
       "group": "Utilities",
-      "pages": ["utilities/render"]
+      "pages": [
+        "utilities/render"
+      ]
     },
     {
       "group": "Integrations",
