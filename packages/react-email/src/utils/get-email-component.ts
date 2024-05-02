@@ -3,16 +3,20 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { type RawSourceMap } from 'source-map-js';
 import { type OutputFile, build, type BuildFailure } from 'esbuild';
+import type { renderAsync } from '@react-email/render';
 import type { EmailTemplate as EmailComponent } from './types/email-template';
 import type { ErrorObject } from './types/error-object';
 import { improveErrorWithSourceMap } from './improve-error-with-sourcemap';
 import { staticNodeModulesForVM } from './static-node-modules-for-vm';
+import { renderResolver } from './render-resolver-esbuild-plugin';
 
 export const getEmailComponent = async (
   emailPath: string,
 ): Promise<
   | {
       emailComponent: EmailComponent;
+
+      renderAsync: typeof renderAsync;
 
       sourceMapToOriginalFile: RawSourceMap;
     }
@@ -23,8 +27,10 @@ export const getEmailComponent = async (
     const buildData = await build({
       bundle: true,
       entryPoints: [emailPath],
+      plugins: [renderResolver([emailPath])],
       platform: 'node',
       write: false,
+
       format: 'cjs',
       jsx: 'automatic',
       logLevel: 'silent',
@@ -63,8 +69,14 @@ export const getEmailComponent = async (
     ReadableStream,
     URL,
     URLSearchParams,
-    module: { exports: { default: undefined as unknown } },
-    __filanem: emailPath,
+    Headers,
+    module: {
+      exports: {
+        default: undefined as unknown,
+        renderAsync: undefined as unknown,
+      },
+    },
+    __filename: emailPath,
     __dirname: path.dirname(emailPath),
     require: (module: string) => {
       if (module in staticNodeModulesForVM) {
@@ -72,7 +84,7 @@ export const getEmailComponent = async (
         return staticNodeModulesForVM[module];
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-useless-template-literals
       return require(`${module}`) as unknown;
       // this stupid string templating was necessary to not have
       // webpack warnings like:
@@ -117,6 +129,8 @@ export const getEmailComponent = async (
 
   return {
     emailComponent: fakeContext.module.exports.default as EmailComponent,
+    renderAsync: fakeContext.module.exports.renderAsync as typeof renderAsync,
+
     sourceMapToOriginalFile: sourceMapToEmail,
   };
 };

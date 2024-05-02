@@ -6,7 +6,21 @@ import { useTailwind } from "./hooks/use-tailwind";
 import { mapReactTree } from "./utils/react/map-react-tree";
 import { useCloneElementWithInlinedStyles } from "./hooks/use-clone-element-with-inlined-styles";
 
-export type TailwindConfig = Omit<TailwindOriginalConfig, "content">;
+export type TailwindConfig = Pick<
+  TailwindOriginalConfig,
+  | "important"
+  | "prefix"
+  | "separator"
+  | "safelist"
+  | "blocklist"
+  | "presets"
+  | "future"
+  | "experimental"
+  | "darkMode"
+  | "theme"
+  | "corePlugins"
+  | "plugins"
+>;
 
 export interface TailwindProps {
   children: React.ReactNode;

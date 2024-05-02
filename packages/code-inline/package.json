@@ -1,6 +1,6 @@
 {
   "name": "@react-email/code-inline",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Display a predictable inline code HTML element that works on all email clients",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -35,7 +35,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "react": "18.2.0"
+    "react": "^18.2.0"
   },
   "devDependencies": {
     "@babel/preset-react": "7.23.3",

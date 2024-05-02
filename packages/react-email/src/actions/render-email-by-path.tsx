@@ -1,6 +1,5 @@
 'use server';
 import fs from 'node:fs';
-import { renderAsync } from '@react-email/render';
 import { getEmailComponent } from '../utils/get-email-component';
 import type { ErrorObject } from '../utils/types/error-object';
 import { improveErrorWithSourceMap } from '../utils/improve-error-with-sourcemap';
@@ -26,7 +25,11 @@ export const renderEmailByPath = async (
     return { error: result.error };
   }
 
-  const { emailComponent: Email, sourceMapToOriginalFile } = result;
+  const {
+    emailComponent: Email,
+    renderAsync,
+    sourceMapToOriginalFile,
+  } = result;
 
   const previewProps = Email.PreviewProps || {};
   const EmailComponent = Email as React.FC;
